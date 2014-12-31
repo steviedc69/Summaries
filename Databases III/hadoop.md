@@ -48,6 +48,8 @@ To modify block sizes
 
 ## MapReduce In Hadoop
 
+### Programming the classes
+
 We will make custom mapper and reducer classes. We will do this through eclipse. 
 
 Don't forget to add the required libraries:
@@ -133,4 +135,16 @@ Run the actual job
         }
     }
 
+### Exporting and running
 
+Before exporting, we will have to set eclipse to compile with Java version 6 and run it at least once to make sure it's correct. Now we export as a runnable JAR, and put the required libraries in the JAR.
+
+Now we will execute the following commands to run our JAR:
+
+    chmod +r mapreduce.jar
+    hadoop fs -mkdir input
+    hadoop fs -put inputData.txt
+    hadoop fs -mv inputData.txt input
+    hadoop jar mapreduce.jar input output
+
+WARNING: the fodler output will be created by Hadoop!
