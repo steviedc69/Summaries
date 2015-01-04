@@ -66,12 +66,21 @@
 
 ## "5 forces" model Porter
 
+De felheid van het concurrentieveld wordt bepaald door een aantal zaken:
 
+![5 forces model Porter](images/porter.jpg)
+
+## Samenwerking
+
+Meerdere voordelen:
+
+ * Lagere kosten door schaalvoordelen
+ * Betere toegang tot nieuwe markten, technologieën en innovaties
+ * Ontmoedigen van nieuwe toetreders
+ * Reduceren van de risico's bij bedrijfsuitbreiding
 
 <!--- TODO
 hfdst2:
-porter wel
-rechtsvormen niet
 samenwerkingen vanaf 46: korte definitie
 transformatieproces!
 kantbehoefte! meekeuze
