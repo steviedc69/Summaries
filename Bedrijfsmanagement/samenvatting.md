@@ -79,9 +79,26 @@ Meerdere voordelen:
  * Ontmoedigen van nieuwe toetreders
  * Reduceren van de risico's bij bedrijfsuitbreiding
 
+### Joint venture
+
+Meerdere partijen spreken af om een economische activiteit samen uit te voeren. De partijen delen dan ook in winst of verlies. De activiteit heeft een bepaalde duur en is geen langdurige zakelijke verbintenis. 
+
+### Franchising
+
+Een externe partij neemt de verkoopactiviteiten over van een bepaalde winkel. De winkel blijft onder dezelfde naam en verkoopt dezelfde artikelen op dezelfde manier (assortiment en verkoopformule blijven gelijk). Kort gesteld mag men ervan uitgaan dat de klanten geen verschil mogen merken terwijl het management van de winkel overgedragen is naar een externe partij.
+
+### Fusie en overname
+
+Een fusie is een samenvloeiing van meerdere bedrijven, waarbij een overname voorkomt als een van de partijen aanzienlijk groter is dan de andere en deze als het ware opslokt. Enkel bedrijven met eenzelfde rechtsvorm mogen fuseren en grote bedrijven moeten hun fusievoorstel voorleggen aan de overheid en dergelijke instanties om concurrentie een kans te geven. Een fusie kan doorgaan via een aandelenruil, het ene bedrijf dat 100% van de aandelen van het andere koopt, een fusiebedrijf dat 100% van de aandelen van beide ondernemingen koopt.
+
+Een fusie is een zeer ingewikkeld proces en vergt veel voorbereiding. 
+
+## Transformatieproces
+
+
+
 <!--- TODO
 hfdst2:
-samenwerkingen vanaf 46: korte definitie
 transformatieproces!
 kantbehoefte! meekeuze
 4P's!
