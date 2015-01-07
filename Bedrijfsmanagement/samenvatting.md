@@ -192,16 +192,17 @@ Het marketing in zijn meest simpele vorm bestaat uit de volgende stappen:
 2. Vaststellen van doelgroepen en doelstellingen
  * Markt onderverdelen in segmenten
  * Doelstellingen opstellen per segment
-3. Ontwikkelen van het aanbod en de aanpak
- * 
+3. Ontwikkelen van het aanbod en de aanpak: marketingmix
+ * productbeleid: Wat moeten we veranderen aan het product of de verkoop?
+ * prijsbeleid: Welke prijs is optimaal?
+ * promotiebeleid: Hoe doelgroep informeren? 
+ * plaats(placement-distributie): Hoe aanbod optimaal aanbieden aan doelgroep?
+ * **5P:** personeel: Aflevering van een dienst
 4. Uitvoeren en implementeren van de commerciële activiteiten
+ * Medewerkers motiveren en opleiden
 5. Controle, evaluatie en bijsturen
 
 <!--- TODO
-hfdst2:
-kantbehoefte! meekeuze
-4P's!
-
 hfdst3:
 ratio's berekenen en interpreteren
 grote oefening
