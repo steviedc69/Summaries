@@ -18,14 +18,12 @@ Give a list of all unique elements in the database
 
     db.collectionName.distinct("param")
 
-### Aggregation functions
+With `.aggregate()`, one can use a multitude of clauses, which get executed in the order they are given.
 
 Example:
 
     db.collectionName.aggregate({$match: {"param": "something"}},
                                 {$group: {_id: "$paramX", "totalSum": {$sum: "$paramY"}}})
-
-With `.aggregate()`, one can use a multitude of clauses, which get executed in the order they are given.
 
 **`$project:`** extracts the selected fields, _id is always included unless `_id:0` is given, can rename given fiels by passing `newName: "$oldName"`
 
@@ -35,6 +33,7 @@ There can be calculations on parameters too by using one of the following accumu
  * **`$addToSet:`** collects unique values of the given field.
  * **`$avg:`** gives the average of all numerical values in this field
  * **`$min and $max:`** give the min/max value of this field
+ * **`$first and $last:`** give the first/last value of this field, only useful after a sort
  * **`$push:`** gives all values for this field
  * **`$sum`** gives the sum of all numerical values in this field
 
@@ -47,3 +46,15 @@ There can be calculations on parameters too by using one of the following accumu
 **`$limit:`** Limits the number of results to the given amount
 
 **`$match:`** Only passes on the entries that conform to the given query
+
+### Other operators
+
+**`$multiply, $divide, $add, $subtract`** all work similar and take an array: `$multiply: ["$pop", 2]` would double the value of `$pop`
+
+**`$year, $month, $week, $dayOfMonth, $dayOfWeek, $dayOfYear, $hour, $minute, $second`** can extract data from a date, like so: `{ $year: "$date" }`
+
+**`$substr`** takes an array with `[expr, startOffset, numOfChars]`
+
+**`$concat`** concatenates all strings in a given array
+
+**`$toLower and $toUpper`** both take a string
