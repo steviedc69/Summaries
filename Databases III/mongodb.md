@@ -1,29 +1,33 @@
-# MongoDB
-=========
-
-## Exercise 5
+# Exercise 5
 
 importing `JSON` data into mongo:
 
-    cd /var/lib/mongo
-    mongoimport --db test --collection collectionName /location/of/JSON.json
+```bash
+cd /var/lib/mongo
+mongoimport --db test --collection collectionName /location/of/JSON.json
+```
 
-### Aggregation functions
+## Aggregation functions
 
 Counting all records: with "param" = "something"
 
-    db.collectionName.count({"param": "something"})
+```javascript
+db.collectionName.count({"param": "something"})
+```
 
 Give a list of all unique elements in the database
 
-    db.collectionName.distinct("param")
+```javascript
+db.collectionName.distinct("param")
+```
 
 With `.aggregate()`, one can use a multitude of clauses, which get executed in the order they are given.
 
 Example:
-
-    db.collectionName.aggregate({$match: {"param": "something"}},
-                                {$group: {_id: "$paramX", "totalSum": {$sum: "$paramY"}}})
+```javascript
+db.collectionName.aggregate({$match: {"param": "something"}},
+                            {$group: {_id: "$paramX", "totalSum": {$sum: "$paramY"}}})
+```
 
 **`$project:`** extracts the selected fields, _id is always included unless `_id:0` is given, can rename given fiels by passing `newName: "$oldName"`
 
@@ -47,7 +51,7 @@ There can be calculations on parameters too by using one of the following accumu
 
 **`$match:`** Only passes on the entries that conform to the given query
 
-### Other operators
+## Other operators
 
 **`$multiply, $divide, $add, $subtract`** all work similar and take an array: `$multiply: ["$pop", 2]` would double the value of `$pop`
 
@@ -58,3 +62,63 @@ There can be calculations on parameters too by using one of the following accumu
 **`$concat`** concatenates all strings in a given array
 
 **`$toLower and $toUpper`** both take a string
+
+# Exercise 6
+
+## Introduction
+
+The mongoDB Mapreduce works as follows: `db.collectionName.mapReduce(map, reduce, options)`: 
+
+The first parameter is the mapper function, which gets applied to each result.
+
+The second parameter is the reducer function, that gets applied to the key-valuearray that comes from the mapper. 
+
+The options must contain an `out`-value, which is a collection where the output will be stored, use `{inline:1}` to simply receive them in the console. A `query`-value can also be given, which gets applied before the mapper. The functions are in JavaScript.
+
+An example mapper function is:
+
+```javascript
+function() {
+    emit(this.theKey, this.theValue);
+}
+```
+
+An example reducer function is:
+
+```javascript
+function(key, values) {
+    return Array.sum(values);
+}
+```
+
+## More examples
+
+To count the 5 most popular items in an array `theArray` over all elements in the collection.
+
+```javascript
+db.collectionName.mapReduce(
+	function() { // mapper
+		if (!this.theArray) {
+			return;
+		}
+		for(index in this.theArray) {
+			emit(this.theArray[index], 1);
+		}
+	}, // end mapper
+	function(key, values) { // reducer
+		return Array.sum(values);
+	}, // end reducer
+	{out: {inline:1}}
+);
+```
+
+# Useful mongoDB commands
+
+| Command						| Meaning
+| :---							| :---
+| `mongo`						| Load mongo shell
+| `show dbs`					| Show current databases
+| `use movies`					| Use the database `movies`
+| `db.getName()`				| Get name current database
+| `show collections`			| Show all tables 
+&copy; JurgenVM
