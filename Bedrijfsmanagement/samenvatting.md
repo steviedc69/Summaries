@@ -202,6 +202,32 @@ Het marketing in zijn meest simpele vorm bestaat uit de volgende stappen:
  * Medewerkers motiveren en opleiden
 5. Controle, evaluatie en bijsturen
 
+# Hoofstuk 3
+
+## De balans
+
+|Activa(Debet)|Passiva(Credit)|
+|-----|------|
+|Vaste activa|Eigen vermogen|
+| * Gebouw| * Gestort kapitaal|
+| * Inventaris| * Aandelenkapitaal|
+| * Machines| |
+| |Vreemd vermogen|
+|Vlottende activa|* Lang vreemd vermogen|
+| * Voorraden| . - Hypothecaire lening|
+| * Debiteuren| . - Langlopende lening|
+| * Bank- en kastegoeden| * Kort vreemd vermogen|
+| | * Rekening-courantkrediet|
+| | * Crediteuren|
+
+Vaste activa zijn elementen die langdurig in gebruik van de onderneming zijn. Vlottende activa zijn elementen die een rol spelen bij het productie-/verkoopproces en daar verbruikt worden.
+
+Passiva zijn de middelen die de activa financieren. Eigen vermogen is het kapitaal van de eigenaren. Lang vreemd vermogen zijn leningen door derden aan de onderneming. Kort vreemd vermogen zijn geldverschaffingen van derden over maximaal 1 jaar. 
+
+## Ratioanalyse
+
+
+
 <!--- TODO
 hfdst3:
 ratio's berekenen en interpreteren
