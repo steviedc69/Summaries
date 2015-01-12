@@ -668,3 +668,16 @@ One can choose to drop both the specs and the body by using `DROP PACKAGE pack_n
 
 Packages with only initialized variables can exist without a body.
 
+# Performance
+
+Performance can be improved by using the `NOCOPY` keyword when defining `OUT`mode parameters in a procedure. This ensures the variable is passed by reference and not by value, thus not copying the data.
+
+```sql
+PROCEDURE proc_name (p_param1 OUT NOCOPY DATATYPE, ...)
+```
+
+The keyword `DETERMINISTIC` can be used when a function always returns the same if the same input is used.
+
+```sql
+	RETURN DATATYPE DETERMINISTIC
+```
