@@ -527,10 +527,14 @@ IS
 	declarations;
 BEGIN
 	statements;
+(EXCEPTION
+	WHEN ... THEN ...;)
 END;
 ```
 
-`OR REPLACE` to overwrite a previous `PROCEDURE` with the same name.
+A procedure can be ended prematurely by calling `RETURN;`
+
+Us the optional part `OR REPLACE` to overwrite a previous `PROCEDURE` with the same name.
 
 **IMPORTANT:** As with everything else in PL/SQL, you cannot invoke a procedure in an SQL statement, put the result in a variable first if you need to.
 
@@ -557,4 +561,63 @@ END subproc;
 
 Parameters can be sent by order (same as procedure definition), by name, using `proc(param2=>v_p2, param1=>v_p1);`, or both. When using both (**strongly** discouraged), positional parameters come first.
 
+## Dropping procedures
+
+    DROP PROCEDURE proc_name;
+
 # Functions
+
+Similar to a procedure, only contains `IN`-parameters and returns one value.
+
+```sql
+CREATE OR REPLACE FUNCTION func_name
+	(param1 DATATYPE (DEFAULT value), 
+	...)
+RETURN DATATYPE
+IS
+	declarations;
+BEGIN
+	statements;
+	RETURN value;
+(EXCEPTION
+	WHEN ... THEN ...;)
+END;
+```
+
+**IMPORTANT:** These can be used in SQL statements, and there is only positional notation for parameters.
+
+## Dropping functions
+
+```sql
+DROP FUNCTION func_name;
+```
+
+# Privileges
+
+```sql
+GRANT privileges (columns) ON object TO user|role|PUBLIC
+```
+
+Privileges are one of the following:
+
+ * `ALTER`
+ * `DELETE`
+ * `EXECUTE`
+ * `INDEX`
+ * `INSERT`
+ * `REFERENCES` check for existence
+ * `SELECT`
+ * `UPDATE`
+
+and similarly, `REVOKE` with identical syntax.
+
+When using a multi-user environment, the references are with the definer, so that if a user calls a function from another user, he or she is using the tables of the person that defined that function.
+
+```sql
+AUTHID CURRENT_USER IS BEGIN
+	statements; -- these get executed in the invoker's environment
+END;
+```
+
+# Packages
+
