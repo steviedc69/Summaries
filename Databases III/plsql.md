@@ -212,6 +212,8 @@ BEGIN
 	CLOSE cursorName; -- required, clears memory
 ```
 
+Cursors can be opened while another cursor is open.
+
 ### Cursor attributes
 
  * **`%FOUND:`** Boolean value that is TRUE if the query returned at least one row.
@@ -240,7 +242,42 @@ END LOOP;
 
 ### Cursor parameters
 
+A cursor can be defined with a parameter, which can be called when opening the cursor. This is very useful, as the statement in the cursor gets executed each time it is opened.
 
+```sql
+DECLARE
+	CURSOR cursorName (p_param NUMBER) IS
+		SELECT * FROM TABLE WHERE id = p_param;
+	...
+BEGIN
+	OPEN cursorName(5);
+	...
+```
+
+### Cursor locking
+
+A cursor can prevent the rows it is acting upon from being changed.
+
+```sql
+CURSOR cursorName IS
+SELECT ... FROM ...
+FOR UPDATE (OF column) (NOWAIT | WAIT n);
+```
+
+Specific columns can be locked by using the `OF` parameter.
+
+If the rows are locked by another session, then the parameters `NOWAIT` and `WAIT n` come into play
+
+ * `NOWAIT` returns an error immediately
+ * `WAIT n` waits for n seconds before trying again, if still locked, returns an error
+
+### Update by cursor
+
+```sql
+UPDATE table
+	SET column = ...
+	WHERE CURRENT OF cursorName; -- takes the 
+```
 
 ## Transaction control
 
@@ -348,4 +385,52 @@ BEGIN
 	END LOOP;
 END;
 ```
+
+## User-defined records
+
+`%ROWTYPE` can be used on cursors, tables and other rowtypes.
+
+Custom records can be created using the following syntax in the `DECLARE` block:
+
+```sql
+TYPE custom_type IS RECORD
+	(col1		table.col1%TYPE,
+	col2		VARCHAR2(60));
+```
+
+Which can then be used like this:
+
+```sql
+DECLARE
+	v_cust_rec	custom_type;
+```
+
+These can also be nested (A custom type can contain fields of *another* custom type).
+
+## Indexing tables of records
+
+```sql
+DECLARE
+	TYPE t_names IS TABLE OF VARCHAR2(50)
+					INDEX BY BINARY_INTEGER;
+```
+
+Accessing by primary key:
+
+```sql
+v_a_table(variable) := something;
+```
+
+A few methods, used by dot-notation:
+
+ * `EXISTS` function to check whether a row exists with this primary key
+ * `COUNT` property of a table, returns the length
+ * `FIRST` property of a table, returns the first primary key
+ * `LAST` property of a table, returns the last primary key
+ * `PRIOR`
+ * `NEXT`
+ * `DELETE`
+ * `TRIM`
+
+The index can only be one field, the data can be a composite data type, like a rowtype.
 
