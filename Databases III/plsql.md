@@ -173,11 +173,7 @@ UPDATE table SET col = newValue (WHERE ...)
 
 ### Implicit Cursors
 
-Cursors are objects that carry the SQL statement. When an SQL statement is executed, one can use the cursor "SQL" to obtain information about the query:
-
- * **`SQL%FOUND:`** Boolean value that is TRUE if the query returned at least one row.
- * **`SQL%NOTFOUND:`** Boolean value that is TRUE if the query returned no rows.
- * **`SQL%ROWCOUNT:`** An integer containing the number of rows affected.
+Cursors are objects that carry the SQL statement. When an SQL statement is executed, one can use the implicit cursor "SQL" to gain information about that statement.
 
 ### Explicit cursors
 
@@ -198,6 +194,53 @@ BEGIN
 	END LOOP;
 	CLOSE cursorName; -- required, clears memory
 ```
+
+Variables can be defined to be of type `cursorName%ROWTYPE`, which is a rowobject. Fields in rows can be accessed through dotnotation. The above now becomes:
+
+```sql
+DECLARE
+	CURSOR cursorName IS
+		SELECT col1, col2 FROM table (WHERE ...);
+	v_row	cursorName%ROWTYPE;
+BEGIN
+	OPEN cursorName; -- executes the query
+	LOOP
+		FETCH cursorName INTO v_row; -- fetches a row
+		EXIT WHEN cursorName%NOTFOUND;
+		DBMS_OUTPUT.PUT_LINE(v_row.col1||' '||v_row.col2);
+	END LOOP;
+	CLOSE cursorName; -- required, clears memory
+```
+
+### Cursor attributes
+
+ * **`%FOUND:`** Boolean value that is TRUE if the query returned at least one row.
+ * **`%NOTFOUND:`** Boolean value that is TRUE if the query returned no rows or there are no more rows to fetch.
+ * **`%ROWCOUNT:`** An integer containing the number of rows affected or the amount of rows already fetched.
+ * **`%ISOPEN:`** Evaluates whether the cursor is open.
+
+**WARNING:** A cursor attribute cannot be used inside SQL statements.
+
+### Cursor FOR loops
+
+One can shorten code a lot by using the cursor `FOR` loop. The following 2 statements are logically identical.
+
+|FOR|%ROWTYPE|
+|-----|-----|
+|`DECLARE`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`CURSOR emp_cursor IS`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`SELECT employee_id, last_name`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`FROM employees`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`WHERE department_id = 50;`<br/>`BEGIN`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`FOR v_emp_record IN emp_cursor`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`LOOP`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`DBMS_OUTPUT.PUT_LINE(...);`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`END LOOP;`<br/>`END`|`DECLARE`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`CURSOR emp_cursor IS`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`SELECT employee_id, last_name`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`FROM employees`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`WHERE department_id = 50;`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`v_emp_record emp_cursor%ROWTYPE;`<br/>`BEGIN`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`OPEN emp_cursor;`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`LOOP`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`FETCH emp_cursor INTO v_emp_record;`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`EXIT WHEN emp_cursor%NOTFOUND;`<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`DBMS_OUTPUT.PUT_LINE(...);`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`END LOOP;`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`CLOSE emp_cursor;`<br/>`END;`<br/>|
+
+One does not need to declare a cursor, but can insert the SQL statement inside a `FOR` declaration:
+
+```sql
+FOR v_emp_record IN SELECT employee_id, last_name FROM employees WHERE department_id = 50
+LOOP
+	DBMS_OUTPUT.PUT_LINE(...);
+END LOOP;
+```
+
+### Cursor parameters
+
+
 
 ## Transaction control
 
