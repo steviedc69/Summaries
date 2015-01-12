@@ -1,6 +1,4 @@
-# Introduction
-
-## Declarations
+# Declarations
 
 ```sql
 DECLARE
@@ -12,7 +10,7 @@ DECLARE
 	fam_party_size	CONSTANT PLS_INTEGER := 20;
 ```
 
-### Using declared variables
+## Using declared variables
 
 ```sql
 DECLARE -- declarations
@@ -24,7 +22,7 @@ BEGIN
 END;
 ```
 
-### Data types
+## Data types
 
 |Datatype|Explanation|
 |----|-----|
@@ -44,7 +42,7 @@ END;
 |`INTERVAL DAY TO SECOND`|stores intervals of days up to seconds|
 |`BOOLEAN`|tri-state value: `TRUE`, `FALSE` or `NULL`|
 
-## Useful keywords
+### Useful keywords
 
 |Keyword|Explanation|
 |----|-----|
@@ -54,7 +52,7 @@ END;
 |`CONSTANT`|declares an unchgangeable variable, needs to be initialized?|
 |`%TYPE`|can be used to dynamicaly get the datatype of a column: `table.col%TYPE`|
 
-## Character functions
+### Character functions
 
 ```
 ASCII LENGTH RPAD
@@ -64,7 +62,7 @@ INITCAP LTRIM TRIM
 INSTR REPLACE UPPER
 ```
 
-## Number functions
+### Number functions
 
 ```
 ABS EXP ROUND
@@ -74,7 +72,7 @@ ATAN MOD TAN
 COS POWER TRUNC
 ```
 
-## Date functions
+### Date functions
 
 ```
 ADD_MONTHS MONTHS_BETWEEN
@@ -83,7 +81,7 @@ CURRENT_TIMESTAMP SYSDATE
 LAST_DAY TRUNC
 ```
 
-## Implicit conversions 
+### Implicit conversions 
 
 (Implicit means no explicit conversion needed)
 
@@ -95,14 +93,14 @@ LAST_DAY TRUNC
 |**`PLS_INTEGER`**	|	|YUP|YUP|	|YUP|
 |**`VARCHAR2`**		|YUP|YUP|YUP|YUP|	|
 
-### Some drawbacks
+#### Some drawbacks
 
  * may be slower
  * making assumptions about future PL/SQL standards
  * depending on environment (for example date formats)
  * harder to read
 
-## Explicit conversions
+### Explicit conversions
 
  * `TO_NUMBER()`
  * `ROWIDTONCHAR()`
@@ -115,7 +113,7 @@ LAST_DAY TRUNC
  * `ROWIDTOCHAR()`
  * `TO_DATE()`
 
-## Order of operations
+### Order of operations
 
 |Operator|Operation|
 |--------|---------|
@@ -128,7 +126,7 @@ LAST_DAY TRUNC
 |``AND``|Conjunction
 |``OR``|Inclusion
 
-## Nested code blocks
+# Nested code blocks
 
 In PL/SQL, one is allowed to nest code blocks, a variables' scope is this block and all nested code blocks. When a variable name is used, the one with the smallest scope is used.
 
@@ -150,7 +148,7 @@ BEGIN
 END;
 ```
 
-## SQL statements
+# SQL statements
 
 To retrieve data from a table, one can use a `SELECT` statement to put values into already declared variables. The query must return exactly one rown for this to work.
 
@@ -169,13 +167,13 @@ UPDATE table SET col = newValue (WHERE ...)
 
 **WARNING:** column names have smaller scope than variable names ergo `WHERE customer_id = customer_id` will not work (returns all rows).
 
-## Cursors
+# Cursors
 
-### Implicit Cursors
+## Implicit Cursors
 
 Cursors are objects that carry the SQL statement. When an SQL statement is executed, one can use the implicit cursor "SQL" to gain information about that statement.
 
-### Explicit cursors
+## Explicit cursors
 
 In the `DECLARE` block, one can declare a cursor and use it in a loop. Here is a simple example:
 
@@ -214,7 +212,7 @@ BEGIN
 
 Cursors can be opened while another cursor is open.
 
-### Cursor attributes
+## Cursor attributes
 
  * **`%FOUND:`** Boolean value that is TRUE if the query returned at least one row.
  * **`%NOTFOUND:`** Boolean value that is TRUE if the query returned no rows or there are no more rows to fetch.
@@ -223,7 +221,7 @@ Cursors can be opened while another cursor is open.
 
 **WARNING:** A cursor attribute cannot be used inside SQL statements.
 
-### Cursor FOR loops
+## Cursor FOR loops
 
 One can shorten code a lot by using the cursor `FOR` loop. The following 2 statements are logically identical.
 
@@ -240,7 +238,7 @@ LOOP
 END LOOP;
 ```
 
-### Cursor parameters
+## Cursor parameters
 
 A cursor can be defined with a parameter, which can be called when opening the cursor. This is very useful, as the statement in the cursor gets executed each time it is opened.
 
@@ -254,7 +252,7 @@ BEGIN
 	...
 ```
 
-### Cursor locking
+## Cursor locking
 
 A cursor can prevent the rows it is acting upon from being changed.
 
@@ -271,7 +269,7 @@ If the rows are locked by another session, then the parameters `NOWAIT` and `WAI
  * `NOWAIT` returns an error immediately
  * `WAIT n` waits for n seconds before trying again, if still locked, returns an error
 
-### Update by cursor
+## Update by cursor
 
 ```sql
 UPDATE table
@@ -279,13 +277,15 @@ UPDATE table
 	WHERE CURRENT OF cursorName; -- takes the 
 ```
 
-## Transaction control
+# Transaction control
 
 A number of commands can be used to control transactions:
 
  * `COMMIT` is used to finalize the previous statement and permanently write them to the database.
  * `ROLLBACK` rolls the state of the db back to the last `COMMIT`.
  * `SAVEPOINT` is used so one can `ROLLBACK` in steps.
+
+# Control structures
 
 ## If/else structure
 
@@ -336,7 +336,7 @@ v_var :=
 	END; -- note the lack of "CASE" here
 ```
 
-## Loop statement
+## Loop structure
 
 A simple loop looks like this:
 
@@ -386,7 +386,7 @@ BEGIN
 END;
 ```
 
-## User-defined records
+# User-defined records
 
 `%ROWTYPE` can be used on cursors, tables and other rowtypes.
 
@@ -407,7 +407,7 @@ DECLARE
 
 These can also be nested (A custom type can contain fields of *another* custom type).
 
-## Indexing tables of records
+# Tables of records
 
 ```sql
 DECLARE
@@ -434,7 +434,7 @@ A few methods, used by dot-notation:
 
 The index can only be one field, the data can be a composite data type, like a rowtype.
 
-## Exceptions
+# Exceptions
 
 Exceptions can be caught by using the following syntax:
 
@@ -492,6 +492,8 @@ EXCEPTION
 END;
 ```
 
+## Scope of exceptions
+
 An exception will halt execution of all code until it is handled. Use nested blocks to handle exceptions when code needs to be executed after an exception is handled. In this example when there is more than one `employee_ID` 999, messages 2 and 3 will be shown; when there is no `employee_id` 999, then message 4 will be shown:
 
 ```sql
@@ -513,5 +515,46 @@ EXCEPTION
 END;
 ```
 
-When declaring exceptions, always declare them in the outermost block, as you otherwise can no longer catch the exception outside the block with its declaration.
+**IMPORTANT:** When declaring exceptions, always declare them in the outermost block, as you otherwise can no longer catch the exception outside the block with its declaration.
 
+# Procedures
+
+```
+CREATE (OR REPLACE) PROCEDURE proc_name
+	(param1 (mode) DATATYPE (DEFAULT value), 
+	...)
+IS
+	declarations;
+BEGIN
+	statements;
+END;
+```
+
+`OR REPLACE` to overwrite a previous `PROCEDURE` with the same name.
+
+**IMPORTANT:** As with everything else in PL/SQL, you cannot invoke a procedure in an SQL statement, put the result in a variable first if you need to.
+
+invoking a procedure is simply calling `proc(params);`.
+
+## Subprocedure
+
+One can declare a subprocedure in the declarations of a main procedure by using this syntax:
+
+```sql
+PROCEDURE subproc (...) IS
+BEGIN
+	statements
+END subproc;
+```
+
+## In/out/in out parameters
+
+ * `IN`-parameters are normal parameters, cannot be changed in the procedure.
+ * `OUT`-parameters are empty variables in the calling environment, which are filled in the procedure.
+ * `IN OUT`-parameters are both at the same time, they send a value to the procedure and get modified.
+
+## Passing parameters
+
+Parameters can be sent by order (same as procedure definition), by name, using `proc(param2=>v_p2, param1=>v_p1);`, or both. When using both (**strongly** discouraged), positional parameters come first.
+
+# Functions
