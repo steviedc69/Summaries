@@ -621,3 +621,50 @@ END;
 
 # Packages
 
+A package contains a specification, and a body. The calling environment can only see the specification. 
+
+```sql
+CREATE (OR REPLACE) PACKAGE pack_name
+AS
+	v_var		VARCHAR2(60);
+	PROCEDURE proc_name (p_param1, ...);
+	CURSOR c_curs IS SELECT * FROM table;
+END
+
+CREATE (OR REPLACE) PACKAGE BODY pack_name
+AS
+	PROCEDURE proc_name 
+		(p_param1, ...) IS
+	BEGIN
+		statements;
+	END;
+END;
+```
+
+To get information about a package: `DESCRIBE pack_name`. Packages get stored in the table `USER_SOURCE`:
+
+```sql
+SELECT text
+	FROM user_source
+	WHERE name = 'PACK_NAME' AND type = 'PACKAGE' -- use 'PACKAGE BODY' to see the body
+	ORDER BY line;
+```
+
+Subprograms can be overloaded when the parameters are entirely different (amount of parameters or completely different types (CHAR and VARCHAR2 are too similar)).
+
+private subprograms and variables must be declared before they are used. Their body can be somewhere else if the declaration is available.
+
+## Visibility
+
+Everything inside package specs is visible to anyone with permission. Everything inside package body is only visible to package body.
+
+To call anything inside a package from the outside, use `pack_name.name`.
+
+## Dropping packages
+
+One can choose to drop both the specs and the body by using `DROP PACKAGE pack_name`, or drop only the body by using `DROP PACKAGE BODY pack_name`.
+
+## Bodiless packages
+
+Packages with only initialized variables can exist without a body.
+
