@@ -140,14 +140,169 @@ DECLARE -- outer block
 	v_myname	VARCHAR2(20);
 BEGIN
 	v_myname := 'John';
-	DBMS_OUTPUT.PUT_LINE('My name is: '||v_myname);
 	DECLARE -- inner block
 		v_myname	VARCHAR2(20);
 	BEGIN
 		v_myname := 'Will';
-		DBMS_OUTPUT.PUT_LINE('My name is: '||v_myname);
-		DBMS_OUTPUT.PUT_LINE('My name is: '||outer.v_myname);
+		DBMS_OUTPUT.PUT_LINE('My name is: '||v_myname); -- Will
+		DBMS_OUTPUT.PUT_LINE('My name is: '||outer.v_myname); -- John
 	END;
+END;
+```
+
+## SQL statements
+
+To retrieve data from a table, one can use a `SELECT` statement to put values into already declared variables. The query must return exactly one rown for this to work.
+
+```sql
+SELECT col1,col2 INTO v_col1, v_col2 FROM table (WHERE ...);
+SELECT sum(col1) INTO v_sum_col1 FROM table (WHERE ...);
+```
+
+One can also use other SQL statements:
+
+```sql
+DELETE FROM table (WHERE ...);
+INSERT INTO table (col1, col2, col3) VALUES ('param', 'values', 99)
+UPDATE table SET col = newValue (WHERE ...)
+```
+
+**WARNING:** column names have smaller scope than variable names ergo `WHERE customer_id = customer_id` will not work (returns all rows).
+
+## Cursors
+
+### Implicit Cursors
+
+Cursors are objects that carry the SQL statement. When an SQL statement is executed, one can use the cursor "SQL" to obtain information about the query:
+
+ * **`SQL%FOUND:`** Boolean value that is TRUE if the query returned at least one row.
+ * **`SQL%NOTFOUND:`** Boolean value that is TRUE if the query returned no rows.
+ * **`SQL%ROWCOUNT:`** An integer containing the number of rows affected.
+
+### Explicit cursors
+
+In the `DECLARE` block, one can declare a cursor and use it in a loop. Here is a simple example:
+
+```sql
+DECLARE
+	CURSOR cursorName IS
+		SELECT col1, col2 FROM table (WHERE ...);
+	v_col1	table.col1%TYPE;
+	v_col2 	table.col2%TYPE;
+BEGIN
+	OPEN cursorName; -- executes the query
+	LOOP
+		FETCH cursorName INTO v_col1, v_col2; -- fetches a row
+		EXIT WHEN cursorName%NOTFOUND;
+		DBMS_OUTPUT.PUT_LINE(v_col1||' '||v_col2);
+	END LOOP;
+	CLOSE cursorName; -- required, clears memory
+```
+
+## Transaction control
+
+A number of commands can be used to control transactions:
+
+ * `COMMIT` is used to finalize the previous statement and permanently write them to the database.
+ * `ROLLBACK` rolls the state of the db back to the last `COMMIT`.
+ * `SAVEPOINT` is used so one can `ROLLBACK` in steps.
+
+## If/else structure
+
+```sql
+IF condition THEN
+	statements; -- only executes these if condition is TRUE, not if FALSE or NULL
+(ELSIF condition THEN
+	statements;)
+(ELSE
+	statements;)
+END IF;
+```
+
+**WARNING:** `NULL` is an unknown value, not an empty one. `NULL = NULL` results in `NULL`, as both are unknown.
+
+## Case structure
+
+```sql
+CASE v_var -- shorter notation for IF/ELSIF/ELSE with the same variable
+	WHEN 'A' THEN 
+		statements; -- same as IF v_var = 'A'
+	WHEN 'B' THEN
+		statements;
+	ELSE
+		statements;
+END CASE;
+```
+
+A `CASE` statement can also be used in an assignment:
+
+```sql
+v_var :=
+	CASE v_other_var
+		WHEN 1 THEN 'One'
+		WHEN 2 THEN 'Two'
+		ELSE 'Many'
+	END; -- note the lack of "CASE" here
+```
+
+Another use is the searching expression, which is a simplified form of `IF/ELSIF/ELSE`.
+
+```sql
+v_var :=
+	CASE -- no selector here
+		WHEN condition1 THEN 'One'
+		WHEN condition2 THEN 'Two'
+		ELSE 'Many'
+	END; -- note the lack of "CASE" here
+```
+
+## Loop statement
+
+A simple loop looks like this:
+
+```sql
+LOOP
+	statements;
+END LOOP;
+```
+
+In the statements must be at least one `EXIT` statement, which can be formed like this:
+
+```sql
+EXIT; -- to use inside an IF statement in the loop
+EXIT WHEN condition; -- simplifies the IF
+```
+
+`WHILE` and `FOR` loops are also available:
+
+```sql
+WHILE condition LOOP
+	statements;
+END LOOP;
+```
+
+```sql
+FOR counter IN (REVERSE) lower..upper LOOP -- counter is defined in the loop as an INTEGER
+										   -- lower and upper are included in the loop 1..3 loops 3 times
+	statements;
+END LOOP;
+```
+
+Nested loops can be used, and the `EXIT` keyword exits the smallest loop. To exit multiple loops at the same time, labels can be given, identical to the scope labels.
+
+```sql
+DECLARE
+	declarations;
+BEGIN
+	<<outer_loop>>
+	LOOP -- outer loop
+		<<inner_loop>>
+		LOOP -- inner loop
+			EXIT outer_loop (WHEN ...) -- Exits both loops
+			EXIT WHEN v_inner_done;
+		END LOOP;
+		EXIT WHEN v_outer_done;
+	END LOOP;
 END;
 ```
 
