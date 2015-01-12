@@ -112,7 +112,7 @@ db.collectionName.mapReduce(
 );
 ```
 
-# Useful mongoDB commands
+# Useful mongoDB commands (&copy; JurgenVM)
 
 | Command						| Meaning
 | :---							| :---
@@ -121,4 +121,3 @@ db.collectionName.mapReduce(
 | `use movies`					| Use the database `movies`
 | `db.getName()`				| Get name current database
 | `show collections`			| Show all tables 
-&copy; JurgenVM
