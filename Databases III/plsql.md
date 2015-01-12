@@ -434,3 +434,84 @@ A few methods, used by dot-notation:
 
 The index can only be one field, the data can be a composite data type, like a rowtype.
 
+## Exceptions
+
+Exceptions can be caught by using the following syntax:
+
+```sql
+DECLARE
+	v_country_name wf_countries.country_name%TYPE := 'Korea, South';
+	v_elevation wf_countries.highest_elevation%TYPE;
+BEGIN
+	SELECT highest_elevation INTO v_elevation
+		FROM wf_countries WHERE country_name = v_country_name;
+EXCEPTION
+	WHEN NO_DATA_FOUND THEN
+		DBMS_OUTPUT.PUT_LINE ('Country name, '|| v_country_name ||', cannot be found. Re-enter the country name using the correct spelling.');
+	WHEN ... (OR ...) THEN
+		...
+END;
+```
+
+List of exceptions:
+
+ * `NO_DATA_FOUND`
+ * `TOO_MANY_ROWS`
+ * `OTHERS` matches all exceptions, can be used as catch-all-exceptions
+ * `INVALID_CURSOR`
+ * `ZERO_DIVIDE`
+ * `DUP_VAL_ON_INDEX`
+
+Other exceptions (without name) can be caught when defined:
+
+```sql
+DECLARE
+	e_insert EXCEPTION;
+	PRAGMA EXCEPTION_INIT(e_insert, -01400);
+BEGIN
+	...
+EXCEPTION
+	WHEN e_insert
+		THEN
+			...
+END;
+```
+
+`SQLCODE NUMBER` and `SQLERRM VARCHAR2(255)` can be used in an exceptionblock to get more info.
+
+One can raise an existing exception using the keyword `RAISE`, or a new one without defining one with `RAISE_APPLICATION_ERROR (errno, 'message');`. Raising a customdefined exception is possible like so:
+
+```sql
+DEFINE
+	e_invalid_nr	EXCEPTION;
+BEGIN
+	RAISE e_invalid_nr;
+EXCEPTION
+	WHEN e_invalid_nr THEN
+		...
+END;
+```
+
+An exception will halt execution of all code until it is handled. Use nested blocks to handle exceptions when code needs to be executed after an exception is handled. In this example when there is more than one `employee_ID` 999, messages 2 and 3 will be shown; when there is no `employee_id` 999, then message 4 will be shown:
+
+```sql
+DECLARE
+	v_last_name employees.last_name%TYPE;
+BEGIN
+	BEGIN
+		SELECT last_name INTO v_last_name
+			FROM employees WHERE employee_id = 999;
+		DBMS_OUTPUT.PUT_LINE('Message 1');
+	EXCEPTION
+		WHEN TOO_MANY_ROWS THEN
+			DBMS_OUTPUT.PUT_LINE('Message 2');
+	END;
+	DBMS_OUTPUT.PUT_LINE('Message 3');
+EXCEPTION
+	WHEN OTHERS THEN
+		DBMS_OUTPUT.PUT_LINE('Message 4');
+END;
+```
+
+When declaring exceptions, always declare them in the outermost block, as you otherwise can no longer catch the exception outside the block with its declaration.
+
